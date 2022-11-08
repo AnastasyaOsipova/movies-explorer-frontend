@@ -1,0 +1,23 @@
+.movies__load-more_button{
+    width: 320px;
+    height: 36px;
+    border: 1px solid rgba(232, 232, 232, 1);
+    background-color: transparent;
+    border-radius: 3px;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.9s ease;
+}
+
+.movies__load-more_button:hover{
+    opacity: 0.6;
+}
+
+@media screen and (max-width: 400px){
+    .movies__load-more_button{
+        width: 240px;
+    }
+}

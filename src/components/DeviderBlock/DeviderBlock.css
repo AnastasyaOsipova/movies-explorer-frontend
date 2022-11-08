@@ -1,0 +1,7 @@
+.devider-block{
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}

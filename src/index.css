@@ -1,0 +1,7 @@
+@import url(./vendor/normalize.css);
+@import url(./vendor/inter.css);
+@import url(./components/Header/Header.css);
+
+body{
+    margin: 0
+};
