@@ -6,6 +6,7 @@ function MoviesCard(props) {
 
     const [isLiked, setIsLiked] = React.useState(false)
 
+    
     function handleCardLike() {
         if( isLiked === false) {
             setIsLiked(true)
@@ -13,9 +14,13 @@ function MoviesCard(props) {
         else{setIsLiked(false)}
     }
 
+
+
     const cardLikeButtonClassName = `movies-card__like-button ${
         isLiked ? "movies-card__like-button_active" : " "
       }`;
+
+    const cardButtonClassName = `movies-card__delete-button`
 
     return(
         <div className='movies-card'>
@@ -27,7 +32,7 @@ function MoviesCard(props) {
                 </div>
                 <button
                     type="button"
-                    className={cardLikeButtonClassName}
+                    className={props.isSaved ? cardButtonClassName : cardLikeButtonClassName}
                     onClick={handleCardLike}>
                 </button>
             </div>

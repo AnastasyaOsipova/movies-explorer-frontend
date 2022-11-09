@@ -39,11 +39,13 @@ function App() {
           <NavigationPopup isOpen={isNavigationPopupOpen} onClose={closeNavigationPopup}/>
           <Header isLogged={true} onClick={openNavigationPopup}/>
           <Movies/>
+          <Footer/>
         </Route>
         <Route path='/saved-movies'>
           <NavigationPopup isOpen={isNavigationPopupOpen} onClose={closeNavigationPopup}/>
           <Header isLogged={true} onClick={openNavigationPopup}/>
           <SavedMovies/>
+          <Footer/>
         </Route>
         <Route path='/profile'>
           <NavigationPopup isOpen={isNavigationPopupOpen} onClose={closeNavigationPopup}/>

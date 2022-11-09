@@ -3,9 +3,9 @@ import './DeviderBlock.css'
 
 function DeviderBlock(props) {
     return(
-        <div className='devider-block'>
+        <section className='devider-block'>
             {props.children}            
-        </div>
+        </section>
     )
 }
 

@@ -1,18 +1,16 @@
 import React from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
-import Footer from '../Footer/Footer';
 import DeviderBlock from '../DeviderBlock/DeviderBlock';
 
 function SavedMovies() {
     return(
-        <div className='movies'>
+        <main className='movies'>
             <SearchForm />
-            <MoviesCardList />
+            <MoviesCardList isSaved={true}/>
             <DeviderBlock />
-            <Footer />
                        
-        </div>
+        </main>
     )
 }
 

@@ -4,7 +4,7 @@ import './NavigationPopup.css'
 
 function NavigationPopup(props){
     return(
-        <div className={`navigation-popup  ${
+        <section className={`navigation-popup  ${
             props.isOpen ? "navigation-popup_opened" : ""
           }`}>
             <div className='navigation-popup__container'>
@@ -28,7 +28,7 @@ function NavigationPopup(props){
                 Аккаунт
             </Link>
             </div>
-            </div>
+            </section>
     )
 }
 

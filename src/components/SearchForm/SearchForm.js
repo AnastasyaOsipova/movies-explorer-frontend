@@ -20,7 +20,7 @@ function SearchForm(){
 
 
     return(
-        <div className='search-form'>
+        <section className='search-form'>
             <form className='search-form__container'>
             <input 
                 required
@@ -39,7 +39,7 @@ function SearchForm(){
             </button>
             </form>
             <FilterCheckbox/>
-        </div>
+        </section>
     )
 }
 

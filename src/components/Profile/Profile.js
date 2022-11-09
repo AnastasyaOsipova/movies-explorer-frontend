@@ -4,7 +4,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 function Profile(props) {
     return(
-        <div className='profile'>
+        <main className='profile'>
             <h2 className='profile__title'>
                 Привет, {props.name}!
             </h2>
@@ -28,7 +28,7 @@ function Profile(props) {
                 <button type='submit' className='profile__update-form_submit-button button'>Редактировать</button>
             </form>
             <button type='button' className='profile__logout-button button'>Выйти из аккаунта</button>
-        </div>
+        </main>
     )
 }
 

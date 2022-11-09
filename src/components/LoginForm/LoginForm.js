@@ -6,7 +6,7 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 function LoginForm(props){
     return(
-        <div className='login'>
+        <main className='login'>
         <div className='login__logo-container'>
         <Logo/>
         </div>
@@ -35,7 +35,7 @@ function LoginForm(props){
             <span className='login-form__link_highlited login-form__link'>{props.answer}</span>
             </Link>
         </form>
-        </div>
+        </main>
     )
 }
 
