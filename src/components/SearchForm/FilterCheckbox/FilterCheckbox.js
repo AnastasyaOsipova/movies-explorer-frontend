@@ -1,27 +1,27 @@
 import React from 'react';
 import './FilterCheckbox.css';
 
-function FilterCheckbox(){
+function FilterCheckbox(props){
     
     const [value, setValue] = React.useState('');
 
-    const [isSelected, setIsSelected] = React.useState(true)
+    //const [isSelected, setIsSelected] = React.useState(true)
 
     function handleChange(e) {
     setValue(e.target.value);
     }
 
     function toggleFilterCheckbox() {
-        if( isSelected === false) {
-            setIsSelected(true)
+        if( props.isSelected === true) {
+            props.searchShortFilms()
         }
-        else{setIsSelected(false)}
+        else{props.searchAllFilms()}
     }
 
     return(
         <div className='filter-checkbox'>
             <div className={`filter-checkbox__form ${
-              isSelected ? 'filter-checkbox__form_active' : ''
+              props.isSelected ? 'filter-checkbox__form_active' : ''
             }`} onClick={toggleFilterCheckbox}>
                 <input 
                     required
@@ -32,8 +32,8 @@ function FilterCheckbox(){
                     id='filter-checkbox'
                     className='filter-checkbox__tub'/>
                 <div className={`filter-checkbox__button ${
-              isSelected ? 'filter-checkbox__button_active' : ''
-            }`}></div>
+                props.isSelected ? 'filter-checkbox__button_active' : ''}`}>
+              </div>
             </div>
                 <p className='filter-checkbox__text'>Короткометражки</p>
         </div>

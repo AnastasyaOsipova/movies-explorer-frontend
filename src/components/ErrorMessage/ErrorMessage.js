@@ -6,7 +6,7 @@ function ErrorMessage(props) {
         <div className={`error-message  ${
             props.isActive ? 'error-message_active' : ''
           }`}>
-            <p className='error-message__text'>Что-то пошло не так...</p>
+            <p className='error-message__text'>{props.message}</p>
         </div>
     )
 }

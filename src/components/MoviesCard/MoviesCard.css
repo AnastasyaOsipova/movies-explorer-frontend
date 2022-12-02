@@ -13,6 +13,8 @@
     object-fit: cover;
     width: 364px;
     height: 243px;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
 }
 
 .movies-card__container{
@@ -63,10 +65,13 @@
     background-color: transparent;
     background-position: center;
     cursor: pointer;
+    background-image: url('../../images/card-delete-icon.svg');
+    opacity: 0.1;
+    transition: all 0.9s ease;
 }
 
 .movies-card__delete-button:hover{
-    background-image: url('../../images/card-delete-icon.svg');
+    opacity: 1;
 }
 
 .movies-card__like-button_active{

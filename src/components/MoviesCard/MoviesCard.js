@@ -7,11 +7,13 @@ function MoviesCard(props) {
     const [isLiked, setIsLiked] = React.useState(false)
 
     
-    function handleCardLike() {
-        if( isLiked === false) {
-            setIsLiked(true)
-        }
-        else{setIsLiked(false)}
+    function handleCardLike(e) {
+        props.saveCard(props.card);
+        setIsLiked(props.isLiked)
+    }
+
+    function handleDelete(e) {
+        props.deleteCard(props.card);
     }
 
 
@@ -24,7 +26,9 @@ function MoviesCard(props) {
 
     return(
         <div className='movies-card'>
-            <img src={props.image} alt={props.nameRU} className='movies-card__poster'/>
+            <a href={props.trailerLink} target='_blank'>
+                <img src={props.image} alt={props.nameRU} className='movies-card__poster'/>
+            </a>
             <div className='movies-card__container'>
                 <div className='movies-card__description'>
                     <h2 className='movies-card__description_title'>{props.nameRU}</h2>
@@ -33,7 +37,7 @@ function MoviesCard(props) {
                 <button
                     type="button"
                     className={props.isSaved ? cardButtonClassName : cardLikeButtonClassName}
-                    onClick={handleCardLike}>
+                    onClick={props.isSaved ? handleDelete : handleCardLike}>
                 </button>
             </div>
         </div>

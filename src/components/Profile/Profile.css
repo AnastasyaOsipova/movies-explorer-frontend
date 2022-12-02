@@ -55,6 +55,21 @@
 
 .profile__update-form_submit-button{
     margin-top: 220px;
+    transition: all 0.9s ease;
+    border: none;
+    background-color: transparent;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(160, 160, 160, 1);
+}
+
+.profile__update-form_submit-button_active:hover{
+    opacity: 0.6;
+}
+
+.profile__update-form_submit-button_active{
+    cursor: pointer;
+    color: rgba(0, 0, 0, 1)
 }
 
 .profile__logout-button{
@@ -92,7 +107,10 @@
        
     .profile__update-form_submit-button{
         margin-top: 379px;
+        font-size: 12px;
+        
     }
+
     
     .profile__logout-button{
         margin-top: 12px; 
