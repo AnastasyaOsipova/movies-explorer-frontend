@@ -17,7 +17,7 @@ function Movies(props) {
                         searchAllFilms={props.searchAllFilms}
                         />
             <MoviesCardList cards={props.cards} isSaved={false} saveCard={props.saveCard} isLiked={props.isLiked} isMovies={true}/>
-            <LoadMore />               
+            <LoadMore handleLoadMore={props.handleLoadMore} cards={props.cards}/>               
         </main>
         <Footer/>
         </div>

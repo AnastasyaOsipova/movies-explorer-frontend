@@ -8,11 +8,16 @@
     font-size: 12px;
     font-weight: 500;
     padding: 0;
-    cursor: pointer;
     transition: all 0.9s ease;
+    opacity: 0;
 }
 
-.movies__load-more_button:hover{
+.movies__load-more_button_active{
+    opacity: 1;
+    cursor: pointer;
+}
+
+.movies__load-more_button_active:hover{
     opacity: 0.6;
 }
 

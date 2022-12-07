@@ -63,7 +63,8 @@ function Profile(props) {
                     </button>
             </form>
             <button type='button' 
-                    className='profile__logout-button button'>
+                    className='profile__logout-button button'
+                    onClick={props.handleLogout}>
                     Выйти из аккаунта
                     </button>
         </main>

@@ -6,13 +6,16 @@ function SearchForm(props){
 
     const [value, setValue] = React.useState('');
 
+    React.useEffect(() =>{const keyWord=localStorage.getItem('keyWord');
+                            if(!props.isSaved && keyWord) {
+                                setValue(keyWord) 
+                            }}
+    ,[])
+
     function handleChange(e) {
     setValue(e.target.value);
     }
 
-    function handleClear() {
-    setValue('');
-    }
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -30,7 +33,6 @@ function SearchForm(props){
                 name="keyWord"
                 value={value}
                 onChange={handleChange}
-                //onClear={handleClear}
                 placeholder="Фильм"
                 id='search-input'
                 className='search-form__input'

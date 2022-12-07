@@ -4,12 +4,9 @@ import './MoviesCard.css';
 
 function MoviesCard(props) {
 
-    const [isLiked, setIsLiked] = React.useState(false)
-
     
     function handleCardLike(e) {
         props.saveCard(props.card);
-        setIsLiked(props.isLiked)
     }
 
     function handleDelete(e) {
@@ -19,7 +16,7 @@ function MoviesCard(props) {
 
 
     const cardLikeButtonClassName = `movies-card__like-button ${
-        isLiked ? "movies-card__like-button_active" : " "
+        props.isLiked ? "movies-card__like-button_active" : " "
       }`;
 
     const cardButtonClassName = `movies-card__delete-button`

@@ -1,10 +1,7 @@
 import React from 'react';
-import { NavLink, Link, Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, } from 'react-router-dom';
 import './App.css';
-import Promo from '../Main/Promo/Promo';
 import Main from '../Main/Main';
-import Header from '../Header/Header';
-import Footer from '../Footer/Footer';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile';
@@ -44,9 +41,9 @@ function App() {
 
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const [isCardLiked, setCardLiked] = React.useState(false);
-
   const [loggedIn, setLoggedIn] = React.useState(handleTokenCheck());
+
+  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
 
   function handleTokenCheck() {
     if (localStorage.getItem("token")) {
@@ -56,7 +53,9 @@ function App() {
       .then((res) => {
         if (res) {
           setLoggedIn(true);
-          console.log(loggedIn)
+        }
+        else{
+          handleLogout()
         }
       })
       .catch((err) => {
@@ -65,12 +64,29 @@ function App() {
   }
 }
 
+  function checkWindowWidth() {
+    setWindowWidth(window.innerWidth);
+    console.log(windowWidth)
+  }
+
+  function handleResize(foundMovies) {
+    if ( windowWidth >= 1220 ) {
+      setCards(foundMovies.slice(0, 12))
+    }
+    if ( windowWidth >= 800 && windowWidth < 1220 ) {
+        setCards(foundMovies.slice(0, 8))
+    }
+    if ( windowWidth <= 500) {
+      setCards(foundMovies.slice(0, 5))
+    }
+  }
+
       
   function searchFilms(movies, keyWord) {
     if (isCheckboxSelected === true)
-      { const foundMovies = movies.filter(function(item) {return item.description.includes(keyWord.toLowerKeys())||item.nameRU.includes(keyWord.toLowerKeys()) });
+      { const foundMovies = movies.filter(function(item) {return item.description.includes(keyWord)||item.nameRU.includes(keyWord) });
         return foundMovies}
-    else{const foundMovies = movies.filter(function(item) {return item.duration>40 && (item.description.includes(keyWord.toLowerKeys())||item.nameRU.includes(keyWord.toLowerKeys()))}); 
+    else{const foundMovies = movies.filter(function(item) {return item.duration>40 && (item.description.includes(keyWord)||item.nameRU.includes(keyWord))}); 
         return foundMovies}
   }
 
@@ -87,35 +103,58 @@ function App() {
     setIsLoading(true);
     moviesApi.getMovies()
     .then((data) => searchFilms(data, keyWord))
-    .then((res) => localStorage.setItem('foundMovies', JSON.stringify(res)))
+    .then((res) => {localStorage.setItem('foundMovies', JSON.stringify(res));
+                    localStorage.setItem('keyWord', keyWord);
+                    localStorage.setItem('isCheckboxSelected', isCheckboxSelected)})
     .then(() => {const foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
             if(foundMovies.length === 0){
               setIsNothingFoundPopupOpen(true)
             }
             else{
-              setCards(foundMovies)
+              handleResize(foundMovies);
             };
      })
-    .catch((err) => setIsSomethingWentWrongPopupOpen(true))
+    .catch((err) => openSomethingWentWrongPopup())
     .finally(() => setIsLoading(false))
+  }
+
+  function searchSavedFilms(keyWord) {
+    const movies = searchFilms(savedCards, keyWord);
+    if (movies.length === 0) {
+      setIsNothingFoundPopupOpen(true)
+    }
+    else{
+      setSavedCards(movies)
+    } 
+  }
+
+  function loadMoreMovies(){
+    const foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
+    if ( windowWidth >= 1220 ) {
+      setCards(foundMovies.slice(0, cards.length+3));
+    }
+    else{
+        setCards(foundMovies.slice(0, cards.length+2));
+    }  
   }
 
   function handleLogin() {
     setLoggedIn(true);
-    console.log(loggedIn)
   }
 
-  function getUser() {
-    mainApi.getUserInfoApi()
-    .then((res) => setCurrentUser(res))
-    .catch((err) => console.log(err))
+  function handleLogout() {
+    setLoggedIn(false);
+    localStorage.removeItem('foundMovies');
+    localStorage.removeItem('token');
+    localStorage.removeItem('keyWord');
+    localStorage.removeItem('isCheckboxSelected')
   }
 
   function updateUserInfo(name, email) {
     console.log(name, email);
     mainApi.updateUserInfo(name, email)
     .then((data) => setCurrentUser(data))
-    .catch(() => setIsSomethingWentWrongPopupOpen(true))
+    .catch(() => openSomethingWentWrongPopup())
   }
 
   function handleSaveMovie(movie) {
@@ -133,7 +172,7 @@ function App() {
                        })
                        .then((data) => {
                         setSavedCards([data, ...savedCards])})
-                      .catch((err) => setIsSomethingWentWrongPopupOpen(true))
+                      .catch((err) => openSomethingWentWrongPopup())
   }
 
   function handleDeleteMovie(movie) {
@@ -144,12 +183,8 @@ function App() {
     .catch((err) => setIsSomethingWentWrongPopupOpen(true))
   }
 
-  function likeCard(){
-    setCardLiked(true)
-  }
-
-  function dislikeCard(){
-    setCardLiked(false)
+  function isLiked(card) {
+    return savedCards.some((item) => item.nameRU === card.nameRU)
   }
 
   function handleLike(movie) {
@@ -159,22 +194,23 @@ function App() {
       const savedMovie = movies.find( function(film) {return film.nameRU.includes(movie.nameRU)} )
       if(savedMovie){
         handleDeleteMovie(savedMovie);
-        likeCard();
-        console.log(isCardLiked)
       }
-      else {handleSaveMovie(movie);
-            dislikeCard();
-            console.log(isCardLiked)}
+      else {handleSaveMovie(movie);}
     })
     .catch((err) => {
-      console.log(err);
-      setIsSomethingWentWrongPopupOpen(true)
+      openSomethingWentWrongPopup()
     })
     .finally(setIsLoading(false))   
   }
 
 
 
+  React.useEffect(() => {
+    window.addEventListener('resize', checkWindowWidth)
+    handleResize(JSON.parse(localStorage.getItem('foundMovies')));
+  }, [windowWidth])
+
+  
   React.useEffect(() => {
       mainApi.getUserInfoApi()
       .then((res) => { if (res._id) {
@@ -191,15 +227,15 @@ function App() {
     });
   }, [loggedIn]);
 
-
-
-
  
     
   React.useEffect(() =>{
     const foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
-    console.log(foundMovies)
-    setCards(foundMovies.slice(0, 12))
+    if(foundMovies)
+    {
+      handleResize(foundMovies);
+      setIsCheckboxSelected(JSON.parse(localStorage.getItem('isCheckboxSelected')));
+    }
   },
   []);  
 
@@ -233,6 +269,7 @@ function App() {
         <NavigationPopup isOpen={isNavigationPopupOpen} onClose={closeAllPopups}/>
         <SomethingWentWrongPopup isOpen={isSomethingWentWrongPopupOpen} onClose={closeAllPopups}/>
         <NothingFoundPopup isOpen={isNothingFoundPopupOpen} onClose={closeAllPopups}/>
+        <WrongUserInfoPopup isOpen={isWrongUserInfoPopupOpen} onClose={closeAllPopups}/>
         <Preloader isOpen={isLoading}/>
         <Switch>
         <Route exact path='/'>
@@ -250,13 +287,15 @@ function App() {
                         isSelected={isCheckboxSelected}
                         searchShortFilms={searchShortFilms}
                         searchAllFilms={searchAllFilms}
-                        isLiked={isCardLiked}
+                        isLiked={isLiked}
+                        handleLoadMore={loadMoreMovies}
                         />
         <ProtectedRoute path='/saved-movies' 
                         component={SavedMovies} 
                         savedCards={savedCards}
                         deleteCard={handleDeleteMovie}  
                         onHeaderClick={openNavigationPopup}
+                        onSearchMovies={searchSavedFilms}
                         loggedIn={loggedIn}
                         isSelected={isCheckboxSelected}
                         searchShortFilms={searchShortFilms}
@@ -265,7 +304,8 @@ function App() {
                         component={Profile} 
                         onUpdateUser={updateUserInfo}
                         onHeaderClick={openNavigationPopup}
-                        loggedIn={loggedIn}/>
+                        loggedIn={loggedIn}
+                        handleLogout={handleLogout}/>
         <Route path='/signin'>
             <Login openErrorPopup={openWrongUserInfoPopup} handleLogin={handleLogin}/>
         </Route>

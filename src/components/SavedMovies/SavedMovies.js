@@ -12,7 +12,9 @@ function SavedMovies(props) {
         <main className='movies'>
             <SearchForm isSelected={props.isSelected}
                         searchShortFilms={props.searchShortFilms}
-                        searchAllFilms={props.searchAllFilms}/>
+                        searchAllFilms={props.searchAllFilms}
+                        isSaved={true}
+                        onSearchMovies={props.onSearchMovies}/>
             <MoviesCardList savedCards={props.savedCards} isSaved={true} deleteCard={props.deleteCard}/>
             <DeviderBlock />
         </main>

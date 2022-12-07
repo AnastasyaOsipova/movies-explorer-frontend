@@ -2,10 +2,13 @@ import React from 'react';
 import DeviderBlock from '../DeviderBlock/DeviderBlock';
 import './LoadMore.css';
 
-function LoadMore() {
+function LoadMore(props) {
+
+    const foundMovies = JSON.parse(localStorage.getItem('foundMovies'))
+
     return(
         <DeviderBlock>
-            <button className='movies__load-more_button'>
+            <button onClick={props.handleLoadMore} className={`movies__load-more_button ${props.cards.length < foundMovies.length ? 'movies__load-more_button_active' : ''}`}>
                 Ещё
             </button>
         </DeviderBlock>

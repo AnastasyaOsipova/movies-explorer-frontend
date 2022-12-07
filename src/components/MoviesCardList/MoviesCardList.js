@@ -16,7 +16,7 @@ function MoviesCardList(props) {
                     nameRU={item.nameRU}
                     duration={`${item.duration}м`}
                     isSaved={props.isSaved}
-                    isLiked={props.isLiked}
+                    isLiked={props.isLiked(item)}
                 />
             )) :  props.savedCards.map((item) => (
                 <MoviesCard
@@ -28,7 +28,6 @@ function MoviesCardList(props) {
                     nameRU={item.nameRU}
                     duration={`${item.duration}м`}
                     isSaved={props.isSaved}
-                    isLiked={props.isLiked}
                 />
             ))}
         </section>
