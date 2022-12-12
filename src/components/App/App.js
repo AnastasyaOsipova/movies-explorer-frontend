@@ -231,7 +231,6 @@ function App() {
     
   React.useEffect(() =>{
     let foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
-    console.log(foundMovies)
     if(foundMovies !== null)
     {
       handleResize(foundMovies);

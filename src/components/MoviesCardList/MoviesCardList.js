@@ -14,7 +14,7 @@ function MoviesCardList(props) {
                     trailerLink={item.trailerLink}
                     image={`https://api.nomoreparties.co${item.image.url}`}
                     nameRU={item.nameRU}
-                    duration={`${item.duration}м`}
+                    duration={item.duration}
                     isSaved={props.isSaved}
                     isLiked={props.isLiked(item)}
                 />
@@ -26,7 +26,7 @@ function MoviesCardList(props) {
                     trailerLink={item.trailerLink}
                     image={item.image}
                     nameRU={item.nameRU}
-                    duration={`${item.duration}м`}
+                    duration={item.duration}
                     isSaved={props.isSaved}
                 />
             ))}

@@ -13,7 +13,19 @@ function MoviesCard(props) {
         props.deleteCard(props.card);
     }
 
-
+    function setDuration() {
+        let hours = Math.floor(props.duration / 60);
+        let minutes = Math.floor(props.duration - hours *60);
+        if (minutes > 0 && hours > 0) {
+            return `${hours} ч ${minutes}м`
+        }
+        if (hours > 0 && minutes === 0) {
+            return `${hours} ч`
+        }
+        if (hours === 0 && minutes) {
+            return `${minutes}м`
+        }
+    }
 
     const cardLikeButtonClassName = `movies-card__like-button ${
         props.isLiked ? "movies-card__like-button_active" : " "
@@ -29,7 +41,7 @@ function MoviesCard(props) {
             <div className='movies-card__container'>
                 <div className='movies-card__description'>
                     <h2 className='movies-card__description_title'>{props.nameRU}</h2>
-                    <p className='movies-card__description_subtitle'>{props.duration}</p>
+                    <p className='movies-card__description_subtitle'>{setDuration()}</p>
                 </div>
                 <button
                     type="button"
