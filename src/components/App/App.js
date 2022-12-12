@@ -33,7 +33,7 @@ function App() {
 
   const [isWrongUserInfoPopupOpen, setIsWrongUserInfoPopupOpen] = React.useState(false);
 
-  const [isCheckboxSelected, setIsCheckboxSelected] = React.useState();
+  const [isCheckboxSelected, setIsCheckboxSelected] = React.useState(false);
 
   const [cards, setCards] = React.useState([]);
 
@@ -66,7 +66,6 @@ function App() {
 
   function checkWindowWidth() {
     setWindowWidth(window.innerWidth);
-    console.log(windowWidth)
   }
 
   function handleResize(foundMovies) {
@@ -105,7 +104,8 @@ function App() {
     .then((data) => searchFilms(data, keyWord))
     .then((res) => {localStorage.setItem('foundMovies', JSON.stringify(res));
                     localStorage.setItem('keyWord', keyWord);
-                    localStorage.setItem('isCheckboxSelected', isCheckboxSelected)})
+                    localStorage.setItem('isCheckboxSelected', isCheckboxSelected)
+                    })
     .then(() => {const foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
             if(foundMovies.length === 0){
               setIsNothingFoundPopupOpen(true)
@@ -130,10 +130,10 @@ function App() {
 
   function loadMoreMovies(){
     const foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
-    if ( windowWidth >= 1220 ) {
+    if ( foundMovies && windowWidth >= 1220 ) {
       setCards(foundMovies.slice(0, cards.length+3));
     }
-    else{
+    else if (foundMovies) {
         setCards(foundMovies.slice(0, cards.length+2));
     }  
   }
@@ -143,11 +143,11 @@ function App() {
   }
 
   function handleLogout() {
-    setLoggedIn(false);
     localStorage.removeItem('foundMovies');
     localStorage.removeItem('token');
     localStorage.removeItem('keyWord');
-    localStorage.removeItem('isCheckboxSelected')
+    localStorage.removeItem('isCheckboxSelected');
+    setLoggedIn(false);
   }
 
   function updateUserInfo(name, email) {
@@ -207,13 +207,13 @@ function App() {
 
   React.useEffect(() => {
     window.addEventListener('resize', checkWindowWidth)
-    handleResize(JSON.parse(localStorage.getItem('foundMovies')));
+    
   }, [windowWidth])
 
   
   React.useEffect(() => {
-      mainApi.getUserInfoApi()
-      .then((res) => { if (res._id) {
+    mainApi.getUserInfoApi()
+     .then((res) => { if (res._id) {
           setLoggedIn(true);  
           setCurrentUser(res);}}
     )
@@ -230,14 +230,25 @@ function App() {
  
     
   React.useEffect(() =>{
-    const foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
-    if(foundMovies)
+    let foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
+    console.log(foundMovies)
+    if(foundMovies !== null)
     {
       handleResize(foundMovies);
-      setIsCheckboxSelected(JSON.parse(localStorage.getItem('isCheckboxSelected')));
+
     }
   },
   []);  
+
+  React.useEffect(() =>{
+    const checkboxStatus = JSON.parse(localStorage.getItem('isCheckboxSelected'));
+    if (checkboxStatus) {
+      setIsCheckboxSelected(checkboxStatus)
+    }
+    else {
+      setIsCheckboxSelected(false)
+    }},
+    []);
 
     
   function closeAllPopups() {

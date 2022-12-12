@@ -8,7 +8,7 @@ function LoadMore(props) {
 
     return(
         <DeviderBlock>
-            <button onClick={props.handleLoadMore} className={`movies__load-more_button ${props.cards.length < foundMovies.length ? 'movies__load-more_button_active' : ''}`}>
+            <button onClick={props.handleLoadMore} className={`movies__load-more_button ${foundMovies && props.cards.length < foundMovies.length ? 'movies__load-more_button_active' : ''}`}>
                 Ещё
             </button>
         </DeviderBlock>
