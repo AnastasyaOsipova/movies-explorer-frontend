@@ -1,5 +1,6 @@
 import React from 'react';
-import { Route, Switch, } from 'react-router-dom';
+import { Route, Switch, Redirect} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import './App.css';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
@@ -41,9 +42,11 @@ function App() {
 
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const [loggedIn, setLoggedIn] = React.useState(handleTokenCheck());
+  const [loggedIn, setLoggedIn] = React.useState();
 
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
+
+  const history = useHistory();
 
   function handleTokenCheck() {
     if (localStorage.getItem("token")) {
@@ -61,6 +64,9 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+  }
+  else {
+    setLoggedIn(false)
   }
 }
 
@@ -83,9 +89,9 @@ function App() {
       
   function searchFilms(movies, keyWord) {
     if (isCheckboxSelected === true)
-      { const foundMovies = movies.filter(function(item) {return item.description.includes(keyWord)||item.nameRU.includes(keyWord) });
+      { const foundMovies = movies.filter(function(item) {return item.description.toLowerCase().includes(keyWord.toLowerCase())||item.nameRU.toLowerCase().includes(keyWord.toLowerCase()) });
         return foundMovies}
-    else{const foundMovies = movies.filter(function(item) {return item.duration>40 && (item.description.includes(keyWord)||item.nameRU.includes(keyWord))}); 
+    else {const foundMovies = movies.filter(function(item) {return item.duration>40 && (item.description.toLowerCase().includes(keyWord.toLowerCase())||item.nameRU.toLowerCase().includes(keyWord.toLowerCase()))}); 
         return foundMovies}
   }
 
@@ -100,8 +106,10 @@ function App() {
 
   function searchNewFilms(keyWord) {
     setIsLoading(true);
+    handleTokenCheck();
     moviesApi.getMovies()
-    .then((data) => searchFilms(data, keyWord))
+    .then((data) => 
+    searchFilms(data, keyWord))
     .then((res) => {localStorage.setItem('foundMovies', JSON.stringify(res));
                     localStorage.setItem('keyWord', keyWord);
                     localStorage.setItem('isCheckboxSelected', isCheckboxSelected)
@@ -143,15 +151,17 @@ function App() {
   }
 
   function handleLogout() {
+    setLoggedIn(false);
     localStorage.removeItem('foundMovies');
     localStorage.removeItem('token');
     localStorage.removeItem('keyWord');
     localStorage.removeItem('isCheckboxSelected');
-    setLoggedIn(false);
+    setCurrentUser({});
+    history.push('/') 
   }
 
   function updateUserInfo(name, email) {
-    console.log(name, email);
+    handleTokenCheck()
     mainApi.updateUserInfo(name, email)
     .then((data) => setCurrentUser(data))
     .catch(() => openSomethingWentWrongPopup())
@@ -171,7 +181,8 @@ function App() {
                         nameRU: movie.nameRU,
                        })
                        .then((data) => {
-                        setSavedCards([data, ...savedCards])})
+                        setSavedCards([data, ...savedCards]);
+                      })
                       .catch((err) => openSomethingWentWrongPopup())
   }
 
@@ -203,6 +214,9 @@ function App() {
     .finally(setIsLoading(false))   
   }
 
+  function handleSetSavedCards(cards){
+    setSavedCards(cards)
+  }
 
 
   React.useEffect(() => {
@@ -212,6 +226,7 @@ function App() {
 
   
   React.useEffect(() => {
+    mainApi.updateToken();
     mainApi.getUserInfoApi()
      .then((res) => { if (res._id) {
           setLoggedIn(true);  
@@ -221,20 +236,28 @@ function App() {
       console.log(err)
     });
     mainApi.getSavedMovies()
-    .then((res) => setSavedCards(res))
+    .then((res) => {setSavedCards(res);
+                    localStorage.setItem('savedCards', JSON.stringify(savedCards));
+                  })
     .catch((err) => {
       console.log(err)
     });
+    moviesApi.getMovies()
+    .then((res) => {localStorage.setItem('allMovies', JSON.stringify(res));
+    })
+.catch((err) => {
+console.log(err)
+});
+    handleTokenCheck()
   }, [loggedIn]);
 
  
     
   React.useEffect(() =>{
-    let foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
+    const foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
     if(foundMovies !== null)
     {
       handleResize(foundMovies);
-
     }
   },
   []);  
@@ -269,8 +292,6 @@ function App() {
     setIsSomethingWentWrongPopupOpen(true)
   }
 
-
-
   
   return(
     <CurrentUserContext.Provider value={currentUser}>
@@ -299,6 +320,8 @@ function App() {
                         searchAllFilms={searchAllFilms}
                         isLiked={isLiked}
                         handleLoadMore={loadMoreMovies}
+                        handleSetSavedCards={handleSetSavedCards}
+                        setIsCheckboxSelected={setIsCheckboxSelected}
                         />
         <ProtectedRoute path='/saved-movies' 
                         component={SavedMovies} 
@@ -309,7 +332,10 @@ function App() {
                         loggedIn={loggedIn}
                         isSelected={isCheckboxSelected}
                         searchShortFilms={searchShortFilms}
-                        searchAllFilms={searchAllFilms}/>
+                        searchAllFilms={searchAllFilms}
+                        handleSetSavedCards={handleSetSavedCards}
+                        setIsCheckboxSelected={setIsCheckboxSelected}
+                        />
         <ProtectedRoute path='/profile' 
                         component={Profile} 
                         onUpdateUser={updateUserInfo}
@@ -317,10 +343,26 @@ function App() {
                         loggedIn={loggedIn}
                         handleLogout={handleLogout}/>
         <Route path='/signin'>
-            <Login openErrorPopup={openWrongUserInfoPopup} handleLogin={handleLogin}/>
+          {() =>
+                loggedIn === undefined ? (
+                  <Preloader isOpen={true} />
+                ) : !loggedIn ? (
+                  <Login openErrorPopup={openWrongUserInfoPopup} handleLogin={handleLogin}/>
+                ) : (
+                  <Redirect to="/movies" />
+                )
+              }
         </Route>
         <Route path='/signup'>   
-            <Register openErrorPopup={openWrongUserInfoPopup} handleLogin={handleLogin}/>
+          {() =>
+                  loggedIn === undefined ? (
+                    <Preloader isOpen={true} />
+                  ) : !loggedIn ? (
+                    <Register openErrorPopup={openWrongUserInfoPopup} handleLogin={handleLogin}/>
+                  ) : (
+                    <Redirect to="/movies" />
+                  )
+                }    
         </Route>
         <Route path="*">
           <Page404 />

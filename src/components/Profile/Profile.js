@@ -19,6 +19,7 @@ function Profile(props) {
   function handleSubmit(e) {
     e.preventDefault();
     props.onUpdateUser(validation.values.name, validation.values.email)
+    validation.setIsValid(false)
 
   }
 

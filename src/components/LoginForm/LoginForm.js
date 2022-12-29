@@ -12,6 +12,7 @@ function LoginForm(props){
 
     const history=useHistory()
 
+
     function logIn(token) {
         localStorage.setItem("token", token);
         props.handleLogin();
@@ -44,12 +45,10 @@ function LoginForm(props){
       .authorize(validation.values.email, validation.values.password)
       .then((res) => {
         if (res.token) {
-          logIn(res.token)
-          localStorage.setItem('token', res.token)
+          logIn(res.token);
         }
         else {
-        props.openErrorPopup();
-          
+        props.openErrorPopup();   
         }
       })
       .catch(() => {

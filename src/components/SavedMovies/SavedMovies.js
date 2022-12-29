@@ -4,8 +4,26 @@ import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import DeviderBlock from '../DeviderBlock/DeviderBlock';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
+import mainApi from '../../utils/MainApi';
+
 
 function SavedMovies(props) {
+
+    React.useEffect(() =>{
+          props.setIsCheckboxSelected(false)
+        },
+        []);
+
+    React.useEffect(() =>{
+        mainApi.getSavedMovies()
+        .then((res) => props.handleSetSavedCards(res))
+        .catch((err) => {
+            console.log(err)
+          });
+      },
+      []);  
+
+
     return(
         <div className='main'>
         <Header loggedIn={props.loggedIn} onHeaderClick={props.onHeaderClick}/> 
