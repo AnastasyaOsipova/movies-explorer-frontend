@@ -1,59 +1,36 @@
 import React from 'react';
 import './MoviesCardList.css'
 import MoviesCard from '../MoviesCard/MoviesCard';
-import MoviePhoto from '../../images/movie1.jpg';
+
 
 function MoviesCardList(props) {
+
     return(
         <section className='movies-card-list'>
-            <MoviesCard 
-                image={MoviePhoto}
-                nameRU={`Киноальманах «100 лет дизайна»`}
-                duration={`1ч 47м`}
-                isSaved={props.isSaved}
-            />
-            <MoviesCard 
-                image={MoviePhoto}
-                nameRU={`Киноальманах «100 лет дизайна»`}
-                duration={`1ч 47м`}
-                isSaved={props.isSaved}
-            />
-            <MoviesCard 
-                image={MoviePhoto}
-                nameRU={`Киноальманах «100 лет дизайна»`}
-                duration={`1ч 47м`}
-                isSaved={props.isSaved}
-            />
-            <MoviesCard 
-                image={MoviePhoto}
-                nameRU={`Киноальманах «100 лет дизайна»`}
-                duration={`1ч 47м`}
-                isSaved={props.isSaved}
-            />
-            <MoviesCard 
-                image={MoviePhoto}
-                nameRU={`Киноальманах «100 лет дизайна»`}
-                duration={`1ч 47м`}
-                isSaved={props.isSaved}
-            />
-            <MoviesCard 
-                image={MoviePhoto}
-                nameRU={`Киноальманах «100 лет дизайна»`}
-                duration={`1ч 47м`}
-                isSaved={props.isSaved}
-            />
-            <MoviesCard 
-                image={MoviePhoto}
-                nameRU={`Киноальманах «100 лет дизайна»`}
-                duration={`1ч 47м`}
-                isSaved={props.isSaved}
-            />
-            <MoviesCard 
-                image={MoviePhoto}
-                nameRU={`Киноальманах «100 лет дизайна»`}
-                duration={`1ч 47м`}
-                isSaved={props.isSaved}
-            />
+            {props.isMovies ? props.cards.map((item) => (
+                <MoviesCard
+                    saveCard={props.saveCard}
+                    card={item}
+                    key={item.id}
+                    trailerLink={item.trailerLink}
+                    image={`https://api.nomoreparties.co${item.image.url}`}
+                    nameRU={item.nameRU}
+                    duration={item.duration}
+                    isSaved={props.isSaved}
+                    isLiked={props.isLiked(item)}
+                />
+            )) :  props.savedCards.map((item) => (
+                <MoviesCard
+                    deleteCard={props.deleteCard}
+                    card={item}
+                    key={item.id}
+                    trailerLink={item.trailerLink}
+                    image={item.image}
+                    nameRU={item.nameRU}
+                    duration={item.duration}
+                    isSaved={props.isSaved}
+                />
+            ))}
         </section>
     )
 }
