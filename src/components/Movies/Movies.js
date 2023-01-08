@@ -8,6 +8,7 @@ import mainApi from '../../utils/MainApi';
 
 function Movies(props) {
 
+
     React.useEffect(() =>{
         const checkboxStatus = JSON.parse(localStorage.getItem('isCheckboxSelected'));
         if (checkboxStatus) {

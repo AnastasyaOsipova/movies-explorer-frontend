@@ -17,6 +17,7 @@ import * as auth from "../../utils/auth";
 import NothingFoundPopup from '../NothingFoundPopup/NothingFoundPopup';
 import SomethingWentWrongPopup from '../SomethingWentWrongPopup/SomethingWentWrongPopup';
 import WrongUserInfoPopup from '../WrongUserInfoPopup/WrongUserInfoPopup';
+import UserInfoChangedPopup from '../UserInfoChangedPopup/UserInfoChangedPopup';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { CurrentUserContext } from '../../contexts/currentUserContext';
 
@@ -33,6 +34,8 @@ function App() {
   const [isSomethingWentWrongPopupOpen, setIsSomethingWentWrongPopupOpen] = React.useState(false);
 
   const [isWrongUserInfoPopupOpen, setIsWrongUserInfoPopupOpen] = React.useState(false);
+
+  const [isUserInfoChangedPopupOpen, setIsUserInfoChangedPopupOpen] = React.useState(false);
 
   const [isCheckboxSelected, setIsCheckboxSelected] = React.useState(false);
 
@@ -157,13 +160,17 @@ function App() {
     localStorage.removeItem('keyWord');
     localStorage.removeItem('isCheckboxSelected');
     setCurrentUser({});
+    setSavedCards([]);
+    setCards([]);
+    mainApi.updateToken();
     history.push('/') 
   }
 
   function updateUserInfo(name, email) {
     handleTokenCheck()
     mainApi.updateUserInfo(name, email)
-    .then((data) => setCurrentUser(data))
+    .then((data) => {setCurrentUser(data);
+                    setIsUserInfoChangedPopupOpen(true)})
     .catch(() => openSomethingWentWrongPopup())
   }
 
@@ -236,31 +243,26 @@ function App() {
       console.log(err)
     });
     mainApi.getSavedMovies()
-    .then((res) => {setSavedCards(res);
-                    localStorage.setItem('savedCards', JSON.stringify(savedCards));
-                  })
+    .then((res) => {setSavedCards(res);})
     .catch((err) => {
       console.log(err)
-    });
-    moviesApi.getMovies()
-    .then((res) => {localStorage.setItem('allMovies', JSON.stringify(res));
     })
-.catch((err) => {
-console.log(err)
-});
-    handleTokenCheck()
-  }, [loggedIn]);
+    .catch((err) => {
+    console.log(err)
+    });
+        handleTokenCheck()
+      }, [loggedIn]);
 
- 
-    
+   
   React.useEffect(() =>{
-    const foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
-    if(foundMovies !== null)
-    {
-      handleResize(foundMovies);
-    }
-  },
+      const foundMovies = JSON.parse(localStorage.getItem('foundMovies'));
+       if(foundMovies !== null)
+        {
+          handleResize(foundMovies);
+        }
+      },
   []);  
+    
 
   React.useEffect(() =>{
     const checkboxStatus = JSON.parse(localStorage.getItem('isCheckboxSelected'));
@@ -278,6 +280,7 @@ console.log(err)
     setIsNothingFoundPopupOpen(false)
     setIsSomethingWentWrongPopupOpen(false)
     setIsWrongUserInfoPopupOpen(false)
+    setIsUserInfoChangedPopupOpen(false)
   }
 
   function openWrongUserInfoPopup(){
@@ -301,6 +304,7 @@ console.log(err)
         <SomethingWentWrongPopup isOpen={isSomethingWentWrongPopupOpen} onClose={closeAllPopups}/>
         <NothingFoundPopup isOpen={isNothingFoundPopupOpen} onClose={closeAllPopups}/>
         <WrongUserInfoPopup isOpen={isWrongUserInfoPopupOpen} onClose={closeAllPopups}/>
+        <UserInfoChangedPopup isOpen={isUserInfoChangedPopupOpen} onClose={closeAllPopups}/>
         <Preloader isOpen={isLoading}/>
         <Switch>
         <Route exact path='/'>

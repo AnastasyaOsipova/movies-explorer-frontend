@@ -23,6 +23,15 @@ function Profile(props) {
 
   }
 
+  function checkUserInfo() {
+    if (currentUser.name !== validation.values.name && currentUser.email!== validation.values.email) {
+        validation.setIsValid(true)
+    }
+    else {
+        validation.setIsValid(true)
+    }
+  }
+
 
     return(
         <div className='main'>
@@ -38,7 +47,7 @@ function Profile(props) {
                        id='name-input'
                        name='name'
                        value={validation.values.name}
-                       onChange={validation.handleChange}
+                       onChange={validation.handleProfileChange}
                        minLength={3}
                        type='text'
                        />
@@ -50,7 +59,7 @@ function Profile(props) {
                         id='email-input'
                         name='email'
                         value={validation.values.email}
-                        onChange={validation.handleChange}
+                        onChange={validation.handleProfileChange}
                         type='email'
                         />
                 </label>

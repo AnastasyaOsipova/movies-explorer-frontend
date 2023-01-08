@@ -4,6 +4,7 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 
 
 function MoviesCardList(props) {
+
     return(
         <section className='movies-card-list'>
             {props.isMovies ? props.cards.map((item) => (

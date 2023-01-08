@@ -8,7 +8,7 @@ const ProtectedRoute = ({ component: Component, ...props }) => {
         {() =>
          {if (props.loggedIn===undefined) {return <Preloader isOpen={true} />} 
          if (props.loggedIn===true) {return <Component {...props} />} 
-         if (props.loggedIn===false) {return <Redirect to="./signin" />}}
+         if (props.loggedIn===false) {return <Redirect to="./" />}}
         }
       </Route>
     );
